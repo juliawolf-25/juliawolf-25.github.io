@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Добро 11 — Волонтёры Коми</title>
+    
+    <!-- ===== PWA НАСТРОЙКИ ===== -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogItCU0L7QsdGA0L4gMTEgLSDQktC+0LvQvtC90YLRkdGA0Ysg0JrQvtC80LgiLAogICJzaG9ydF9uYW1lIjogItCU0L7QsdGA0L4gMTEiLAogICJkZXNjcmlwdGlvbiI6ICLQldC00LjQvdGL0Lkg0YbQtdC90YLRgCDQstC+0LvQvtC90YLRkdGA0YHQutC40YUg0LzQtdGA0L7Qv9GA0LjRj9GC0LjQuSDQoNC10YHQv9GD0LHQu9C40LrQuCDQmtC+0LzQuCIsCiAgInN0YXJ0X3VybCI6ICJpbmRleC5odG1sIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAib3JpZW50YXRpb24iOiAicG9ydHJhaXQiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNGRkZGRkYiLAogICJ0aGVtZV9jb2xvciI6ICIjMjdBRTYwIiwKICAiaWNvbnMiOiBbCiAgICB7ICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgNTEyIDUxMic+PHJlY3Qgd2lkdGg9JzUxMicgaGVpZ2h0PSc1MTInIHJ4PSc4MCcgZmlsbD0nIzI3QUU2MCcvPjx0ZXh0IHg9JzI1NicgeT0nMzUwJyBmb250LXNpemU9JzI4MCcgdGV4dC1hbmNob3I9J21pZGRsZScgZmlsbD0nd2hpdGUnPvCdpI08L3RleHQ+PC9zdmc+IiwgInNpemVzIjogIjUxMng1MTIiLCAidHlwZSI6ICJpbWFnZS9zdmcreG1sIiB9CiAgXQp9">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Добро 11">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#27AE60">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/main.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/main.min.css">
+    
+    <style>
+        :root {
+            --primary: #27AE60;
+            --primary-dark: #1E8449;
+            --primary-light: #D5F5E3;
+            --secondary: #2980B9;
+            --danger: #E74C3C;
+            --danger-light: #FADBD8;
+            --warning: #F1C40F;
+            --warning-light: #FDEBD0;
+            --text-dark: #2C3E50;
+            --text-light: #7F8C8D;
+            --bg-light: #F0F4F8;
+            --shadow-card: 0 2px 12px rgba(0,0,0,0.06);
+            --shadow-hover: 0 8px 24px rgba(0,0,0,0.10);
+            --radius-card: 14px;
+            --radius-button: 10px;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding: 0;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: #ffffff;
+            min-height: 100vh;
+            box-shadow: 0 0 40px rgba(0,0,0,0.06);
+            position: relative;
+            padding-bottom: 80px;
+        }
+        
+        @media (min-width: 768px) {
+            .app-container {
+                max-width: 768px;
+                padding-bottom: 40px;
+                margin: 20px auto;
+                border-radius: 24px;
+                min-height: 90vh;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+            }
+            body { padding: 20px; background: #e8ecf1; }
+        }
+        
+        @media (min-width: 1024px) {
+            .app-container { max-width: 1024px; }
+        }
+        
+        /* ===== ШАПКА ===== */
+        .header {
+            background: white;
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .logo {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            background: none;
+            border: none;
+        }
+        
+        .logo i { font-size: 1.2rem; }
+        .logo .sub { font-size: 0.5rem; color: var(--text-light); font-weight: 400; display: block; }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .header-actions .btn-icon {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            padding: 6px 8px;
+            border-radius: 50%;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        
+        .header-actions .btn-icon:active { background: var(--bg-light); transform: scale(0.95); }
+        .header-actions .btn-sm {
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        
+        @media (min-width: 768px) {
+            .header { padding: 16px 24px; }
+            .logo { font-size: 1.4rem; }
+            .logo .sub { font-size: 0.6rem; }
+        }
+        
+        /* ===== НИЖНЯЯ НАВИГАЦИЯ ===== */
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 480px;
+            width: 100%;
+            background: white;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-around;
+            padding: 6px 0 12px;
+            z-index: 999;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.04);
+        }
+        
+        @media (min-width: 768px) {
+            .tab-bar { display: none; }
+            .app-container { padding-bottom: 20px; }
+        }
+        
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1px;
+            background: none;
+            border: none;
+            font-size: 0.5rem;
+            color: var(--text-light);
+            padding: 4px 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+            min-width: 44px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .tab-item i { font-size: 1.3rem; transition: 0.2s; }
+        .tab-item.active { color: var(--primary); }
+        .tab-item.active i { transform: scale(1.05); }
+        .tab-item:active { transform: scale(0.92); }
+        
+        .tab-item.create-tab i {
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            padding: 8px;
+            font-size: 1.1rem;
+            margin-top: -16px;
+            box-shadow: 0 4px 12px rgba(39,174,96,0.3);
+        }
+        
+        .tab-item.create-tab.active i { background: var(--primary-dark); }
+        
+        /* ===== КОНТЕНТ ===== */
+        .content { padding: 12px 14px 20px; }
+        .page { display: none; animation: fadeUp 0.3s ease; }
+        .page.active { display: block; }
+        
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (min-width: 768px) {
+            .content { padding: 20px 24px; }
+            .page { animation: none; }
+        }
+        
+        /* ===== ГЕРОЙ ===== */
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: var(--radius-card);
+            padding: 20px 18px;
+            margin-bottom: 16px;
+        }
+        
+        .hero h1 { font-weight: 700; font-size: 1.4rem; }
+        .hero .lead { font-size: 0.85rem; opacity: 0.9; margin: 2px 0 4px; }
+        .hero .sub-lead { font-size: 0.7rem; opacity: 0.7; }
+        
+        .quick-help {
+            background: rgba(255,255,255,0.15);
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 10px;
+        }
+        
+        .quick-help .input-group-custom {
+            display: flex;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .quick-help .input-group-custom input {
+            flex: 1;
+            border: none;
+            padding: 10px 12px;
+            font-size: 0.85rem;
+            outline: none;
+            background: transparent;
+            min-width: 0;
+        }
+        
+        .quick-help .input-group-custom button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .quick-help .chips {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+        
+        .quick-help .chips .chip {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        
+        .quick-help .chips .chip:active { background: rgba(255,255,255,0.35); transform: scale(0.95); }
+        
+        @media (min-width: 768px) {
+            .hero { padding: 30px 28px; }
+            .hero h1 { font-size: 2rem; }
+            .hero .lead { font-size: 1.1rem; }
+        }
+        
+        /* ===== СТАТИСТИКА ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .stats-card {
+            background: white;
+            border-radius: 12px;
+            padding: 12px 4px;
+            text-align: center;
+            border: 1px solid #eee;
+            transition: 0.2s;
+        }
+        
+        .stats-card:active { transform: scale(0.96); }
+        .stats-card .number { font-size: 1.2rem; font-weight: 700; }
+        .stats-card .label { font-size: 0.5rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.3px; }
+        .stats-card .number.primary { color: var(--primary); }
+        .stats-card .number.danger { color: var(--danger); }
+        .stats-card .number.secondary { color: var(--secondary); }
+        
+        @media (min-width: 768px) {
+            .stats-grid { gap: 16px; margin-bottom: 24px; }
+            .stats-card { padding: 20px 8px; }
+            .stats-card .number { font-size: 2rem; }
+            .stats-card .label { font-size: 0.7rem; }
+            .stats-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+        }
+        
+        /* ===== КАРТОЧКИ МЕРОПРИЯТИЙ ===== */
+        .event-card {
+            background: white;
+            border-radius: var(--radius-card);
+            padding: 14px;
+            margin-bottom: 12px;
+            border: 1px solid #eee;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        
+        .event-card:active { transform: scale(0.98); }
+        
+        .event-card .badge-type {
+            font-size: 0.6rem;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .badge-type.search { background: var(--danger-light); color: var(--danger); }
+        .badge-type.veterans { background: #D6EAF8; color: var(--secondary); }
+        .badge-type.subbotnik { background: var(--primary-light); color: var(--primary); }
+        .badge-type.donation { background: var(--warning-light); color: #E67E22; }
+        .badge-type.animals { background: #E8DAEF; color: #8E44AD; }
+        .badge-type.other { background: #F5EEF8; color: #6C3483; }
+        
+        .badge-status {
+            font-size: 0.55rem;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .badge-status.urgent { background: var(--danger-light); color: var(--danger); animation: pulse 2s infinite; }
+        .badge-status.active { background: var(--primary-light); color: var(--primary); }
+        .badge-status.full { background: #D6EAF8; color: var(--secondary); }
+        
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+        
+        .event-card .title { font-weight: 600; font-size: 0.95rem; margin: 4px 0 2px; }
+        .event-card .meta { font-size: 0.75rem; color: var(--text-light); }
+        .event-card .meta i { margin-right: 3px; }
+        
+        .progress-custom {
+            height: 3px;
+            background: #eee;
+            border-radius: 4px;
+            margin: 6px 0;
+            overflow: hidden;
+        }
+        
+        .progress-custom .bar { height: 100%; background: var(--primary); border-radius: 4px; }
+        
+        .event-card .skills { display: flex; gap: 4px; flex-wrap: wrap; margin: 4px 0; }
+        .event-card .skills .tag { background: #f0f0f0; padding: 2px 10px; border-radius: 12px; font-size: 0.6rem; color: var(--text-light); }
+        
+        .btn-action {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: var(--radius-button);
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-top: 6px;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        
+        .btn-action:active { transform: scale(0.97); }
+        .btn-action.primary { background: var(--primary); color: white; }
+        .btn-action.primary:hover { background: var(--primary-dark); }
+        .btn-action.outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+        .btn-action.outline:hover { background: var(--primary-light); }
+        
+        @media (min-width: 768px) {
+            .events-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+            .event-card { margin-bottom: 0; }
+            .event-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+            .event-card .title { font-size: 1.05rem; }
+        }
+        
+        /* ===== ЛИДЕРБОРД ===== */
+        .leader-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 10px 14px;
+            border-radius: 12px;
+            margin-bottom: 6px;
+            border: 1px solid #eee;
+            transition: 0.2s;
+        }
+        
+        .leader-item:active { transform: scale(0.98); }
+        .leader-item .medal { font-size: 1.3rem; }
+        .leader-item .name { font-weight: 600; font-size: 0.9rem; }
+        .leader-item .points { margin-left: auto; font-weight: 600; color: var(--primary); font-size: 0.9rem; }
+        
+        /* ===== ТЕГИ ЛОКАЦИЙ ===== */
+        .location-tag {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin: 2px;
+            cursor: pointer;
+            transition: 0.2s;
+            border: none;
+        }
+        
+        .location-tag:active { background: var(--primary-light); color: var(--primary); transform: scale(0.95); }
+        .location-tag:hover { background: var(--primary-light); color: var(--primary); }
+        
+        /* ===== КАРТА ===== */
+        #map {
+            height: 300px;
+            border-radius: var(--radius-card);
+            overflow: hidden;
+            border: 1px solid #eee;
+            z-index: 1;
+        }
+        
+        .map-legend {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 0.7rem;
+            border: 1px solid #eee;
+        }
+        
+        .map-legend .item { display: flex; align-items: center; gap: 4px; }
+        .map-legend .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        
+        @media (min-width: 768px) {
+            #map { height: 450px; }
+            .map-legend { font-size: 0.85rem; padding: 12px 16px; }
+        }
+        
+        /* ===== ФИЛЬТРЫ ===== */
+        .filters-sidebar {
+            background: white;
+            border-radius: var(--radius-card);
+            padding: 14px;
+            border: 1px solid #eee;
+            margin-bottom: 12px;
+        }
+        
+        .filters-sidebar select,
+        .filters-sidebar input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+            background: white;
+        }
+        
+        .filters-sidebar select:focus,
+        .filters-sidebar input:focus { outline: none; border-color: var(--primary); }
+        
+        .filters-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        
+        /* ===== ФОРМЫ ===== */
+        .form-group { margin-bottom: 12px; }
+        .form-group label { font-weight: 500; font-size: 0.85rem; display: block; margin-bottom: 4px; }
+        .form-group label .required { color: var(--danger); }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            background: white;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(39,174,96,0.1);
+        }
+        .form-group .helper { font-size: 0.7rem; color: var(--text-light); margin-top: 4px; }
+        
+        /* ===== МОДАЛЬНОЕ ОКНО ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active { display: flex; }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-content .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .modal-content .modal-header h5 { font-weight: 600; font-size: 1.1rem; }
+        .modal-content .modal-header button { background: none; border: none; font-size: 1.5rem; color: var(--text-light); cursor: pointer; }
+        
+        /* ===== УВЕДОМЛЕНИЯ ===== */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+            width: 90%;
+            max-width: 400px;
+            pointer-events: none;
+        }
+        
+        .toast {
+            padding: 12px 20px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            font-size: 0.9rem;
+            animation: slideDown 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            width: 100%;
+            text-align: center;
+            pointer-events: auto;
+        }
+        
+        .toast.success { background: var(--primary); }
+        .toast.error { background: var(--danger); }
+        .toast.info { background: var(--secondary); }
+        .toast.warning { background: #E67E22; }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* ===== АВТОРИЗАЦИЯ ===== */
+        .auth-card {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid #eee;
+        }
+        
+        .auth-card .auth-title { text-align: center; font-size: 1.3rem; font-weight: 600; margin-bottom: 16px; }
+        .auth-card .auth-title i { color: var(--primary); }
+        
+        .role-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        
+        .role-selector .role-option {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: 0.2s;
+            background: white;
+        }
+        
+        .role-selector .role-option:active { transform: scale(0.96); }
+        .role-selector .role-option.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+        
+        /* ===== ФУТЕР ===== */
+        .footer {
+            background: white;
+            padding: 16px 0;
+            border-top: 1px solid #eee;
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+        
+        .btn {
+            border-radius: var(--radius-button);
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        
+        .btn:active { transform: scale(0.96); }
+        .btn-primary { background: var(--primary); border-color: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); border-color: var(--primary-dark); color: white; }
+        .btn-outline-primary { color: var(--primary); border-color: var(--primary); }
+        .btn-outline-primary:hover { background: var(--primary); color: white; }
+        
+        .btn-social {
+            background: var(--secondary);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 0.8rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: 600;
+        }
+        
+        .btn-social:active { transform: scale(0.95); }
+        .btn-social:hover { background: #1A5276; }
+        
+        .badge { font-weight: 500; }
+        .text-muted { color: var(--text-light) !important; }
+        .bg-light { background-color: var(--bg-light) !important; }
+        
+        /* ===== СКРОЛЛ ===== */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #f0f0f0; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+        
+        /* ===== БАННЕР УСТАНОВКИ ===== */
+        .install-banner {
+            display: none;
+            background: var(--primary);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        
+        .install-banner.show { display: flex; }
+        .install-banner .btn-install {
+            background: white;
+            color: var(--primary);
+            border: none;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        .install-banner .btn-install:active { transform: scale(0.95); }
+        
+        @media (max-width: 767px) {
+            .install-banner { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container" id="app">
+    
+    <div class="install-banner" id="installBanner">
+        <span><i class="bi bi-download"></i> Установить приложение</span>
+        <button class="btn-install" onclick="installApp()">📲 Установить</button>
+    </div>
+    
+    <header class="header">
+        <button class="logo" onclick="showPage('home')">
+            <i class="bi bi-heart-fill"></i> ДОБРО 11
+            <span class="sub">Республика Коми</span>
+        </button>
+        <div class="header-actions">
+            <button class="btn-icon" onclick="showPage('profile')" title="Профиль"><i class="bi bi-person-circle"></i></button>
+            <button class="btn btn-sm btn-outline-secondary" onclick="showPage('login')">Войти</button>
+            <button class="btn btn-sm btn-primary" onclick="showPage('register')">Регистрация</button>
+        </div>
+    </header>
+    
+    <div class="content">
+        
+        <!-- ==================== ГЛАВНАЯ ==================== -->
+        <div class="page active" id="page-home">
+            <div class="hero">
+                <h1><i class="bi bi-heart-fill"></i> Добро 11</h1>
+                <div class="lead">Единый центр волонтерских мероприятий</div>
+                <div class="sub-lead">Республика Коми</div>
+                <p style="font-size:0.8rem;opacity:0.8;margin:4px 0 0;">"Вместе мы можем больше!"</p>
+                
+                <div class="quick-help">
+                    <div class="input-group-custom">
+                        <input type="text" placeholder="💬 Расскажите, какая помощь нужна..." id="quickHelp">
+                        <button onclick="quickHelp()" type="button"><i class="bi bi-magic"></i></button>
+                    </div>
+                    <div class="chips">
+                        <button class="chip" onclick="fillHelp('Нужна помощь ветерану с уборкой квартиры в Сыктывкаре')">❤️ Ветерану</button>
+                        <button class="chip" onclick="fillHelp('Пропал человек в лесу под Ухтой')">🔍 Поиск</button>
+                        <button class="chip" onclick="fillHelp('Хочу организовать субботник в Воркуте')">🌿 Субботник</button>
+                        <button class="chip" onclick="fillHelp('Нужна помощь в приюте для животных в Печоре')">🐾 Животные</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stats-card"><div class="number primary">150</div><div class="label">Мероприятий</div></div>
+                <div class="stats-card"><div class="number danger">45</div><div class="label">Активных</div></div>
+                <div class="stats-card"><div class="number secondary">1 200</div><div class="label">Волонтёров</div></div>
+                <div class="stats-card"><div class="number primary">89%</div><div class="label">Закрыто</div></div>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 style="font-weight:600;font-size:1rem;"><i class="bi bi-fire" style="color:var(--danger);"></i> Активные</h5>
+                <button class="btn btn-sm btn-outline-primary" onclick="showPage('events')">Все →</button>
+            </div>
+            
+            <div class="events-grid">
+                <div class="event-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <span class="badge-type search">🔍 Поиск</span>
+                        <span class="badge-status urgent">🔥 СРОЧНО!</span>
+                    </div>
+                    <div class="title">🏔️ Поиск пропавшего в лесу</div>
+                    <div class="meta"><i class="bi bi-geo-alt"></i> Сыктывкар</div>
+                    <div class="meta"><i class="bi bi-calendar"></i> Завтра 08:00</div>
+                    <div class="d-flex justify-content-between mt-1">
+                        <span style="font-size:0.75rem;"><i class="bi bi-people"></i> 8/15</span>
+                        <span style="font-size:0.75rem;color:var(--danger);font-weight:600;">7 мест</span>
+                    </div>
+                    <div class="progress-custom"><div class="bar" style="width:53%;"></div></div>
+                    <div class="skills"><span class="tag">Альпинизм</span><span class="tag">Медицина</span><span class="tag">GPS</span></div>
+                    <button class="btn-action primary" onclick="event.stopPropagation(); joinEvent()">✅ Записаться</button>
+                </div>
+                
+                <div class="event-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <span class="badge-type veterans">❤️ Ветераны</span>
+                        <span class="badge-status full">✅ Полно</span>
+                    </div>
+                    <div class="title">Помощь ветерану — уборка</div>
+                    <div class="meta"><i class="bi bi-geo-alt"></i> Ухта</div>
+                    <div class="meta"><i class="bi bi-calendar"></i> Сегодня 14:00</div>
+                    <div class="d-flex justify-content-between mt-1">
+                        <span style="font-size:0.75rem;"><i class="bi bi-people"></i> 3/3</span>
+                        <span style="font-size:0.75rem;color:var(--secondary);font-weight:600;">✅ Полно</span>
+                    </div>
+                    <div class="progress-custom"><div class="bar" style="width:100%;background:var(--secondary);"></div></div>
+                    <div class="skills"><span class="tag">Уборка</span><span class="tag">Помощь пожилым</span></div>
+                    <button class="btn-action outline" onclick="showPage('event-detail')">📋 Подробнее</button>
+                </div>
+                
+                <div class="event-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <span class="badge-type subbotnik">🌿 Субботник</span>
+                        <span class="badge-status active">⚡ 8 мест</span>
+                    </div>
+                    <div class="title">Субботник в парке</div>
+                    <div class="meta"><i class="bi bi-geo-alt"></i> Воркута</div>
+                    <div class="meta"><i class="bi bi-calendar"></i> Суббота 10:00</div>
+                    <div class="d-flex justify-content-between mt-1">
+                        <span style="font-size:0.75rem;"><i class="bi bi-people"></i> 12/20</span>
+                        <span style="font-size:0.75rem;color:var(--primary);font-weight:600;">8 мест</span>
+                    </div>
+                    <div class="progress-custom"><div class="bar" style="width:60%;"></div></div>
+                    <div class="skills"><span class="tag">Без навыков</span></div>
+                    <button class="btn-action primary" onclick="event.stopPropagation(); joinEvent()">✅ Записаться</button>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <h5 style="font-weight:600;font-size:0.95rem;"><i class="bi bi-trophy" style="color:#F1C40F;"></i> Лучшие волонтёры</h5>
+                <div class="leader-item"><span class="medal">🥇</span><div><div class="name">Анна Иванова</div><div style="font-size:0.65rem;color:var(--text-light);">25 мероприятий</div></div><div class="points">250 баллов</div></div>
+                <div class="leader-item"><span class="medal">🥈</span><div><div class="name">Дмитрий Петров</div><div style="font-size:0.65rem;color:var(--text-light);">18 мероприятий</div></div><div class="points">210 баллов</div></div>
+                <div class="leader-item"><span class="medal">🥉</span><div><div class="name">Сергей Смирнов</div><div style="font-size:0.65rem;color:var(--text-light);">15 мероприятий</div></div><div class="points">180 баллов</div></div>
+            </div>
+            
+            <div class="mt-4">
+                <h5 style="font-weight:600;font-size:0.9rem;"><i class="bi bi-geo-alt"></i> Населённые пункты Коми</h5>
+                <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;">
+                    <button class="location-tag" onclick="showPage('events')">Сыктывкар</button>
+                    <button class="location-tag" onclick="showPage('events')">Ухта</button>
+                    <button class="location-tag" onclick="showPage('events')">Воркута</button>
+                    <button class="location-tag" onclick="showPage('events')">Печора</button>
+                    <button class="location-tag" onclick="showPage('events')">Усинск</button>
+                    <button class="location-tag" onclick="showPage('events')">Сосногорск</button>
+                    <button class="location-tag" onclick="showPage('events')">Инта</button>
+                    <button class="location-tag" onclick="showPage('events')">Емва</button>
+                    <button class="location-tag" onclick="showPage('events')">Выльгорт</button>
+                    <button class="location-tag" style="background:var(--primary-light);color:var(--primary);" onclick="showPage('events')">+747</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ==================== МЕРОПРИЯТИЯ ==================== -->
+        <div class="page" id="page-events">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 style="font-weight:600;font-size:1rem;"><i class="bi bi-calendar-event"></i> Мероприятия</h5>
+                <button class="btn btn-sm btn-primary" onclick="showPage('create')"><i class="bi bi-plus-circle"></i> Создать</button>
+            </div>
+            
+            <div class="filters-sidebar">
+                <div class="filters-row">
+                    <select id="filterType"><option value="">Все типы</option><option value="search">🔍 Поиск</option><option value="veterans">❤️ Ветераны</option><option value="subbotnik">🌿 Субботник</option><option value="donation">🩸 Донорство</option></select>
+                    <select id="filterCity"><option value="">Все города</option><option value="Сыктывкар">Сыктывкар</option><option value="Ухта">Ухта</option><option value="Воркута">Воркута</option><option value="Печора">Печора</option></select>
+                </div>
+                <button class="btn btn-primary w-100 btn-sm" onclick="applyFilter()"><i class="bi bi-search"></i> Применить</button>
+            </div>
+            
+            <div class="events-grid" id="eventsList">
+                <div class="event-card" onclick="showPage('event-detail')">
+                    <span class="badge-type search">🔍 Поиск</span>
+                    <span class="badge-status urgent" style="float:right;">🔥 СРОЧНО!</span>
+                    <div class="title">🏔️ Поиск в лесу — Сыктывкар</div>
+                    <div class="meta">📍 Сыктывкар • 📅 15.07.2026 08:00</div>
+                    <div style="font-size:0.75rem;">👥 8/15 • ⚡ 7 мест</div>
+                    <div class="progress-custom"><div class="bar" style="width:53%;"></div></div>
+                    <button class="btn-action primary" onclick="event.stopPropagation(); showPage('event-detail')">📋 Подробнее</button>
+                </div>
+                
+                <div class="event-card">
+                    <span class="badge-type veterans">❤️ Ветераны</span>
+                    <span class="badge-status full" style="float:right;">✅ Полно</span>
+                    <div class="title">Помощь ветерану — Ухта</div>
+                    <div class="meta">📍 Ухта • 📅 16.07.2026 14:00</div>
+                    <div style="font-size:0.75rem;">👥 3/3 • ✅ Полно</div>
+                    <div class="progress-custom"><div class="bar" style="width:100%;background:var(--secondary);"></div></div>
+                    <button class="btn-action outline" onclick="showPage('event-detail')">📋 Подробнее</button>
+                </div>
+                
+                <div class="event-card">
+                    <span class="badge-type subbotnik">🌿 Субботник</span>
+                    <span class="badge-status active" style="float:right;">⚡ 8 мест</span>
+                    <div class="title">Субботник — Воркута</div>
+                    <div class="meta">📍 Воркута • 📅 17.07.2026 10:00</div>
+                    <div style="font-size:0.75rem;">👥 12/20 • ⚡ 8 мест</div>
+                    <div class="progress-custom"><div class="bar" style="width:60%;"></div></div>
+                    <button class="btn-action primary" onclick="showPage('event-detail')">📋 Подробнее</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ==================== КАРТА ==================== -->
+        <div class="page" id="page-map">
+            <h5 style="font-weight:600;font-size:1rem;"><i class="bi bi-map"></i> Карта мероприятий</h5>
+            <div class="map-legend">
+                <span class="item"><span class="dot" style="background:#E74C3C;"></span> Поиск</span>
+                <span class="item"><span class="dot" style="background:#2980B9;"></span> Ветераны</span>
+                <span class="item"><span class="dot" style="background:#27AE60;"></span> Субботник</span>
+                <span class="item"><span class="dot" style="background:#F1C40F;"></span> Донорство</span>
+                <span class="item"><span class="dot" style="background:#8E44AD;"></span> Животные</span>
+                <span class="item"><span class="dot" style="background:#E67E22;"></span> Другое</span>
+            </div>
+            <div id="map"></div>
+            <div class="mt-2"><button class="btn btn-outline-secondary btn-sm" onclick="showPage('events')"><i class="bi bi-list"></i> Смотреть списком</button></div>
+        </div>
+        
+        <!-- ==================== КАЛЕНДАРЬ ==================== -->
+        <div class="page" id="page-calendar">
+            <h5 style="font-weight:600;font-size:1rem;"><i class="bi bi-calendar3"></i> Календарь</h5>
+            <div id="calendar" style="background:white;border-radius:14px;padding:12px;border:1px solid #eee;"></div>
+        </div>
+        
+        <!-- ==================== ПРОФИЛЬ ==================== -->
+        <div class="page" id="page-profile">
+            <div style="text-align:center;padding:16px 0;">
+                <i class="bi bi-person-circle" style="font-size:3.5rem;color:var(--primary);"></i>
+                <h5 style="margin-top:6px;" id="profileName">Анна Иванова</h5>
+                <div style="color:var(--text-light);font-size:0.8rem;">Волонтёр</div>
+                <div style="display:flex;justify-content:center;gap:16px;margin-top:6px;">
+                    <div><span style="font-weight:600;color:var(--primary);">250</span> баллов</div>
+                    <div><span style="font-weight:600;color:var(--secondary);">25</span> участий</div>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary w-100 btn-sm mb-3" onclick="showPage('profile-edit')">
+                <i class="bi bi-pencil"></i> Редактировать профиль
+            </button>
+            
+            <div class="card border-0 shadow-sm rounded-4 p-3 mb-2">
+                <div style="font-weight:600;font-size:0.85rem;"><i class="bi bi-envelope"></i> Email</div>
+                <div style="font-size:0.8rem;color:var(--text-light);" id="profileEmail">anna@mail.ru</div>
+            </div>
+            <div class="card border-0 shadow-sm rounded-4 p-3 mb-2">
+                <div style="font-weight:600;font-size:0.85rem;"><i class="bi bi-phone"></i> Телефон</div>
+                <div style="font-size:0.8rem;color:var(--text-light);" id="profilePhone">+7 999 123-45-67</div>
+            </div>
+            <div class="card border-0 shadow-sm rounded-4 p-3 mb-2">
+                <div style="font-weight:600;font-size:0.85rem;"><i class="bi bi-geo-alt"></i> Город</div>
+                <div style="font-size:0.8rem;color:var(--text-light);" id="profileCity">Не указан</div>
+            </div>
+            <div class="card border-0 shadow-sm rounded-4 p-3 mb-2">
+                <div style="font-weight:600;font-size:0.85rem;"><i class="bi bi-file-text"></i> О себе</div>
+                <div style="font-size:0.8rem;color:var(--text-light);" id="profileAbout">—</div>
+            </div>
+            <div class="card border-0 shadow-sm rounded-4 p-3 mb-3">
+                <div style="font-weight:600;font-size:0.85rem;"><i class="bi bi-tags"></i> Навыки</div>
+                <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;" id="profileSkills">
+                    <span class="badge bg-secondary">Медицина</span>
+                    <span class="badge bg-secondary">IT</span>
+                    <span class="badge bg-secondary">Альпинизм</span>
+                </div>
+            </div>
+            
+            <div class="card border-0 shadow-sm rounded-4 p-3 mb-2">
+                <div style="font-weight:600;font-size:0.85rem;">📋 Мои записи</div>
+                <div class="d-flex justify-content-between border-bottom py-2" style="font-size:0.8rem;">
+                    <span>✅ Поиск в лесу — Сыктывкар</span>
+                    <span class="text-success">15.07</span>
+                </div>
+                <div class="d-flex justify-content-between border-bottom py-2" style="font-size:0.8rem;">
+                    <span>✅ Помощь ветерану — Ухта</span>
+                    <span class="text-success">16.07</span>
+                </div>
+                <div class="d-flex justify-content-between py-2" style="font-size:0.8rem;">
+                    <span>⏳ Субботник — Воркута</span>
+                    <span class="text-warning">17.07</span>
+                </div>
+            </div>
+            
+            <button class="btn btn-outline-danger w-100 btn-sm mt-2" onclick="deleteAccount()">🗑️ Удалить аккаунт</button>
+        </div>
+        
+        <!-- ==================== РЕДАКТИРОВАНИЕ ПРОФИЛЯ ==================== -->
+        <div class="page" id="page-profile-edit">
+            <button class="btn btn-sm btn-outline-secondary mb-3" onclick="showPage('profile')">
+                <i class="bi bi-arrow-left"></i> Назад
+            </button>
+            <h5 style="font-weight:600;font-size:1rem;">
+                <i class="bi bi-pencil-square"></i> Редактирование профиля
+            </h5>
+            <div class="card border-0 shadow-sm rounded-4 p-3">
+                <div class="form-group">
+                    <label>👤 ФИО <span class="required">*</span></label>
+                    <input type="text" id="editName" placeholder="Иванова Анна Петровна">
+                </div>
+                <div class="form-group">
+                    <label>📧 Email <span class="required">*</span></label>
+                    <input type="email" id="editEmail" placeholder="example@mail.ru">
+                </div>
+                <div class="form-group">
+                    <label>📱 Телефон <span class="required">*</span></label>
+                    <input type="text" id="editPhone" placeholder="+7 999 123-45-67">
+                </div>
+                <div class="form-group">
+                    <label>🏙️ Город</label>
+                    <select id="editCity">
+                        <option value="">Не указан</option>
+                        <option>Сыктывкар</option>
+                        <option>Ухта</option>
+                        <option>Воркута</option>
+                        <option>Печора</option>
+                        <option>Усинск</option>
+                        <option>Сосногорск</option>
+                        <option>Инта</option>
+                        <option>Емва</option>
+                        <option>Выльгорт</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>📝 О себе</label>
+                    <textarea id="editAbout" rows="3" placeholder="Коротко о себе, опыт волонтёрства..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>🛠️ Навыки (через запятую)</label>
+                    <input type="text" id="editSkills" placeholder="Медицина, IT, Альпинизм">
+                </div>
+                <hr>
+                <h6 style="font-size:0.85rem;"><i class="bi bi-shield-lock"></i> Смена пароля</h6>
+                <div class="form-group">
+                    <label>🔒 Новый пароль</label>
+                    <input type="password" id="editPassword" placeholder="••••••••">
+                    <div class="helper">Оставьте пустым, если не хотите менять</div>
+                </div>
+                <div class="form-group">
+                    <label>🔒 Подтверждение</label>
+                    <input type="password" id="editConfirm" placeholder="••••••••">
+                </div>
+                <div class="d-flex gap-2 mt-2">
+                    <button class="btn btn-primary flex-grow-1" onclick="saveProfile()">
+                        <i class="bi bi-check-circle"></i> Сохранить
+                    </button>
+                    <button class="btn btn-outline-secondary" onclick="showPage('profile')">
+                        Отмена
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ==================== ДЕТАЛЬНАЯ КАРТОЧКА ==================== -->
+        <div class="page" id="page-event-detail">
+            <button class="btn btn-sm btn-outline-secondary mb-3" onclick="showPage('events')"><i class="bi bi-arrow-left"></i> Назад</button>
+            <div class="card border-0 shadow-sm rounded-4 p-3">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                    <div>
+                        <span class="badge-type search">🔍 Поиск</span>
+                        <span class="badge-status urgent ms-2">🔥 СРОЧНО!</span>
+                        <h5 class="mt-2">🏔️ Поиск пропавшего в лесу — Сыктывкар</h5>
+                    </div>
+                </div>
+                <hr>
+                <div><h6 style="font-size:0.85rem;"><i class="bi bi-geo-alt"></i> Локация</h6><p style="font-size:0.85rem;">Сыктывкар, лесной массив</p></div>
+                <div><h6 style="font-size:0.85rem;"><i class="bi bi-calendar"></i> Дата</h6><p style="font-size:0.85rem;">15 июля 2026, 08:00 — 20:00</p></div>
+                <div><h6 style="font-size:0.85rem;"><i class="bi bi-people"></i> Волонтёры</h6>
+                    <p style="font-size:0.85rem;">8 из 15 записались</p>
+                    <div class="progress" style="height:16px;"><div class="progress-bar bg-primary" style="width:53%;">53%</div></div>
+                    <span class="text-danger" style="font-size:0.8rem;">🔥 Осталось 7 мест</span>
+                </div>
+                <hr>
+                <div><h6 style="font-size:0.85rem;"><i class="bi bi-tags"></i> Требуемые навыки</h6>
+                    <div class="d-flex gap-1 flex-wrap"><span class="badge bg-secondary">Альпинизм</span><span class="badge bg-secondary">Медицина</span><span class="badge bg-secondary">GPS</span></div>
+                </div>
+                <hr>
+                <div><h6 style="font-size:0.85rem;"><i class="bi bi-file-text"></i> Описание</h6><p style="font-size:0.85rem;">Срочный поиск пропавшего человека в лесном массиве Сыктывкара. Мужчина, 45 лет, был в походе, не вышел на связь 2 дня.</p></div>
+                <hr>
+                <div><h6 style="font-size:0.85rem;"><i class="bi bi-person"></i> Организатор</h6><p style="font-size:0.85rem;">НКО "Помощь"</p><p class="text-muted small"><i class="bi bi-telephone"></i> +7 999 123-45-67</p></div>
+                
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                    <button class="btn btn-primary flex-grow-1" onclick="joinEvent()">✅ Записаться</button>
+                    <button class="btn btn-social" onclick="openModal()"><i class="bi bi-share"></i> Публиковать</button>
+                </div>
+                <button class="btn btn-outline-secondary w-100 mt-2" onclick="showPage('events')">📋 Назад</button>
+            </div>
+        </div>
+        
+        <!-- ==================== СОЗДАНИЕ ==================== -->
+        <div class="page" id="page-create">
+            <button class="btn btn-sm btn-outline-secondary mb-3" onclick="showPage('events')"><i class="bi bi-arrow-left"></i> Назад</button>
+            <h5 style="font-weight:600;font-size:1rem;"><i class="bi bi-plus-circle"></i> Создание мероприятия</h5>
+            <div class="card border-0 shadow-sm rounded-4 p-3">
+                <div class="form-group"><label>📝 Название <span class="required">*</span></label><input type="text" placeholder="Поиск пропавшего..." id="createTitle"></div>
+                <div class="form-group"><label>📋 Тип <span class="required">*</span></label>
+                    <select id="createType"><option value="search">🔍 Поиск пропавшего</option><option value="veterans">❤️ Помощь ветеранам</option><option value="subbotnik">🌿 Субботник</option><option value="donation">🩸 Донорство</option><option value="animals">🐾 Животные</option><option value="other">📌 Другое</option></select>
+                </div>
+                <div class="form-group"><label>📍 Населённый пункт <span class="required">*</span></label>
+                    <select id="createCity"><option>Сыктывкар</option><option>Ухта</option><option>Воркута</option><option>Печора</option><option>Усинск</option><option>Сосногорск</option><option>Инта</option><option>Емва</option><option>Выльгорт</option></select>
+                </div>
+                <div class="row g-2">
+                    <div class="col-6"><div class="form-group"><label>📅 Дата начала</label><input type="datetime-local" id="createDateStart" value="2026-07-15T08:00"></div></div>
+                    <div class="col-6"><div class="form-group"><label>📅 Дата окончания</label><input type="datetime-local" id="createDateEnd" value="2026-07-15T20:00"></div></div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-4"><div class="form-group"><label>👥 Нужно</label><input type="number" id="createNeeded" value="15" min="1"></div></div>
+                    <div class="col-4"><div class="form-group"><label>🔞 Возраст</label><select id="createAge"><option value="0">Без</option><option value="14">14+</option><option value="16">16+</option><option value="18">18+</option></select></div></div>
+                    <div class="col-4"><div class="form-group"><label>🛠️ Навыки</label><input type="text" id="createSkills" placeholder="Альпинизм"></div></div>
+                </div>
+                <div class="form-group"><label>📝 Описание <span class="required">*</span></label><textarea rows="3" placeholder="Подробное описание..." id="createDescription"></textarea></div>
+                <div class="row g-2">
+                    <div class="col-6"><div class="form-group"><label>📱 Телефон</label><input type="text" id="createPhone" placeholder="+7 999 123-45-67"></div></div>
+                    <div class="col-6"><div class="form-group"><label>📧 Email</label><input type="email" id="createEmail" placeholder="org@mail.ru"></div></div>
+                </div>
+                <hr>
+                <div class="bg-light p-2 rounded-3 mb-2">
+                    <h6 style="font-size:0.85rem;"><i class="bi bi-robot"></i> Текстовый помощник</h6>
+                    <div class="input-group input-group-sm">
+                        <input type="text" class="form-control" id="assistantInput" placeholder="Моей бабушке нужна уборка...">
+                        <button class="btn btn-outline-primary btn-sm" onclick="assistantFill()"><i class="bi bi-magic"></i></button>
+                    </div>
+                </div>
+                <button class="btn btn-primary w-100" onclick="createEvent()"><i class="bi bi-send"></i> Отправить на модерацию</button>
+            </div>
+        </div>
+        
+        <!-- ==================== ВХОД ==================== -->
+        <div class="page" id="page-login">
+            <button class="btn btn-sm btn-outline-secondary mb-3" onclick="showPage('home')"><i class="bi bi-arrow-left"></i> На главную</button>
+            <div class="auth-card">
+                <div class="auth-title"><i class="bi bi-heart-fill"></i> Добро 11</div>
+                <div style="text-align:center;color:var(--text-light);font-size:0.85rem;margin-bottom:16px;">Вход в систему</div>
+                <div class="form-group"><label>📧 Email</label><input type="email" id="loginEmail" placeholder="example@mail.ru"></div>
+                <div class="form-group"><label>🔒 Пароль</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
+                <button class="btn btn-primary w-100" onclick="doLogin()">✅ Войти</button>
+                <hr>
+                <div class="text-center" style="font-size:0.85rem;">Нет аккаунта? <button class="btn btn-link p-0" onclick="showPage('register')" style="text-decoration:none;color:var(--primary);">Зарегистрироваться</button></div>
+            </div>
+        </div>
+        
+        <!-- ==================== РЕГИСТРАЦИЯ ==================== -->
+        <div class="page" id="page-register">
+            <button class="btn btn-sm btn-outline-secondary mb-3" onclick="showPage('home')"><i class="bi bi-arrow-left"></i> На главную</button>
+            <div class="auth-card">
+                <div class="auth-title"><i class="bi bi-person-plus"></i> Регистрация</div>
+                <div style="text-align:center;color:var(--text-light);font-size:0.85rem;margin-bottom:12px;">Присоединяйтесь к движению</div>
+                <div class="role-selector">
+                    <button class="role-option active" onclick="selectRole(this, 'volunteer')" type="button"><i class="bi bi-person"></i> Волонтёр</button>
+                    <button class="role-option" onclick="selectRole(this, 'organizer')" type="button"><i class="bi bi-building"></i> Организатор</button>
+                </div>
+                <div class="form-group"><label>📧 Email <span class="required">*</span></label><input type="email" id="regEmail" placeholder="example@mail.ru"></div>
+                <div class="form-group"><label>👤 ФИО <span class="required">*</span></label><input type="text" id="regName" placeholder="Иванова Анна Петровна"></div>
+                <div class="form-group"><label>📱 Телефон <span class="required">*</span></label><input type="text" id="regPhone" placeholder="+7 999 123-45-67"></div>
+                <div class="form-group"><label>🔒 Пароль <span class="required">*</span></label><input type="password" id="regPassword" placeholder="••••••••"><div class="helper">Минимум 8 символов</div></div>
+                <div class="form-group"><label>🔒 Подтверждение <span class="required">*</span></label><input type="password" id="regConfirm" placeholder="••••••••"></div>
+                <div class="form-group"><label>🛠️ Навыки (через запятую)</label><input type="text" id="regSkills" placeholder="Медицина, IT, Альпинизм"></div>
+                <div style="margin-bottom:12px;">
+                    <input type="checkbox" id="regConsent">
+                    <label for="regConsent" style="font-size:0.75rem;color:var(--text-light);">Я согласен на обработку персональных данных (152-ФЗ)</label>
+                </div>
+                <button class="btn btn-primary w-100" onclick="doRegister()">📝 Зарегистрироваться</button>
+                <hr>
+                <div class="text-center" style="font-size:0.85rem;">Уже есть аккаунт? <button class="btn btn-link p-0" onclick="showPage('login')" style="text-decoration:none;color:var(--primary);">Войти</button></div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <!-- ===== НИЖНЯЯ НАВИГАЦИЯ ===== -->
+    <div class="tab-bar">
+        <button class="tab-item active" onclick="showPage('home')" data-tab="home"><i class="bi bi-house"></i> Главная</button>
+        <button class="tab-item" onclick="showPage('events')" data-tab="events"><i class="bi bi-calendar-event"></i> События</button>
+        <button class="tab-item create-tab" onclick="showPage('create')" data-tab="create"><i class="bi bi-plus"></i></button>
+        <button class="tab-item" onclick="showPage('map')" data-tab="map"><i class="bi bi-map"></i> Карта</button>
+        <button class="tab-item" onclick="showPage('profile')" data-tab="profile"><i class="bi bi-person"></i> Профиль</button>
+    </div>
+    
+    <div class="footer">
+        © 2026 «Добро 11» — Волонтёрская платформа Республики Коми
+    </div>
+</div>
+
+<!-- ===== МОДАЛЬНОЕ ОКНО (ПУБЛИКАЦИЯ) ===== -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5>📱 Публикация в соцсетях</h5>
+            <button onclick="closeModal()" type="button">✕</button>
+        </div>
+        <div class="bg-light p-2 rounded-3 mb-3">
+            <p class="mb-0" style="font-size:0.85rem;"><strong>Мероприятие:</strong> Поиск пропавшего в лесу</p>
+            <p class="mb-0" style="font-size:0.85rem;"><strong>Участников:</strong> 15 волонтёров</p>
+        </div>
+        <div class="form-group">
+            <label>📝 Текст поста</label>
+            <textarea class="form-control" rows="3" id="postText">"Поиск пропавшего в лесном массиве Сыктывкара успешно завершён! В акции приняли участие 15 волонтёров. #Добро11 #Волонтёры"</textarea>
+        </div>
+        <div class="mb-2">
+            <label>📌 Выберите соцсети</label>
+            <div class="d-flex gap-3">
+                <div><input type="checkbox" id="checkVK" checked> <i class="bi bi-vk"></i> VK</div>
+                <div><input type="checkbox" id="checkOK"> <i class="bi bi-ok"></i> OK</div>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-primary flex-grow-1" onclick="publishPost()" type="button">📤 Опубликовать</button>
+            <button class="btn btn-outline-secondary" onclick="closeModal()" type="button">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== УВЕДОМЛЕНИЯ ===== -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+    // ============================================================
+    // ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
+    // ============================================================
+    let deferredPrompt;
+    let mapInitialized = false;
+    let calendarInitialized = false;
+    let currentRole = 'volunteer';
+    
+    // Профиль пользователя
+    let userProfile = {
+        name: 'Анна Иванова',
+        email: 'anna@mail.ru',
+        phone: '+7 999 123-45-67',
+        city: '',
+        about: '',
+        skills: ['Медицина', 'IT', 'Альпинизм']
+    };
+    
+    // ============================================================
+    // НАВИГАЦИЯ МЕЖДУ СТРАНИЦАМИ
+    // ============================================================
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        
+        const target = document.getElementById('page-' + pageId);
+        if (target) {
+            target.classList.add('active');
+        }
+        
+        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+        const activeTab = document.querySelector(`.tab-item[data-tab="${pageId}"]`);
+        if (activeTab) {
+            activeTab.classList.add('active');
+        }
+        
+        closeModal();
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        if (pageId === 'map' && !mapInitialized) {
+            initMap();
+            mapInitialized = true;
+        }
+        
+        if (pageId === 'calendar' && !calendarInitialized) {
+            initCalendar();
+            calendarInitialized = true;
+        }
+        
+        if (pageId === 'profile-edit') {
+            fillProfileForm();
+        }
+        
+        if (pageId === 'profile') {
+            updateProfileView();
+        }
+    }
+    
+    // ============================================================
+    // УВЕДОМЛЕНИЯ (ТОСТЫ)
+    // ============================================================
+    function showToast(message, type) {
+        type = type || 'info';
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = 'toast ' + type;
+        toast.textContent = message;
+        container.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.3s';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+    
+    // ============================================================
+    // ПОМОЩНИК
+    // ============================================================
+    function fillHelp(text) {
+        const input = document.getElementById('quickHelp');
+        if (input) input.value = text;
+    }
+    
+    function quickHelp() {
+        const input = document.getElementById('quickHelp');
+        const text = input ? input.value : '';
+        if (!text.trim()) {
+            showToast('Напишите, какая помощь нужна', 'warning');
+            return;
+        }
+        showToast('✅ Заявка обработана! Перейдите в "Создать".', 'success');
+    }
+    
+    function assistantFill() {
+        const input = document.getElementById('assistantInput');
+        const text = input ? input.value : '';
+        if (!text.trim()) {
+            showToast('Напишите описание проблемы', 'warning');
+            return;
+        }
+        
+        const lower = text.toLowerCase();
+        let type = 'other';
+        if (lower.includes('поиск') || lower.includes('пропал') || lower.includes('лес')) type = 'search';
+        else if (lower.includes('ветеран') || lower.includes('бабушк') || lower.includes('дедушк')) type = 'veterans';
+        else if (lower.includes('субботник') || lower.includes('уборк') || lower.includes('мусор')) type = 'subbotnik';
+        else if (lower.includes('донор') || lower.includes('кровь')) type = 'donation';
+        else if (lower.includes('животн') || lower.includes('собак') || lower.includes('кошк')) type = 'animals';
+        
+        const typeSelect = document.getElementById('createType');
+        if (typeSelect) typeSelect.value = type;
+        
+        showToast('✅ Автозаполнение выполнено!', 'success');
+    }
+    
+    // ============================================================
+    // РОЛИ ПРИ РЕГИСТРАЦИИ
+    // ============================================================
+    function selectRole(element, role) {
+        document.querySelectorAll('.role-option').forEach(r => r.classList.remove('active'));
+        element.classList.add('active');
+        currentRole = role;
+    }
+    
+    // ============================================================
+    // МОДАЛЬНОЕ ОКНО
+    // ============================================================
+    function openModal() {
+        const modal = document.getElementById('modalOverlay');
+        if (modal) {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+    
+    function closeModal() {
+        const modal = document.getElementById('modalOverlay');
+        if (modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+    
+    function publishPost() {
+        const vk = document.getElementById('checkVK');
+        const ok = document.getElementById('checkOK');
+        
+        if ((!vk || !vk.checked) && (!ok || !ok.checked)) {
+            showToast('Выберите хотя бы одну соцсеть', 'warning');
+            return;
+        }
+        
+        closeModal();
+        showToast('✅ Пост опубликован!', 'success');
+    }
+    
+    // ============================================================
+    // ЗАПИСЬ НА МЕРОПРИЯТИЕ
+    // ============================================================
+    function joinEvent() {
+        showToast('✅ Вы записаны на мероприятие!', 'success');
+    }
+    
+    // ============================================================
+    // СОЗДАНИЕ МЕРОПРИЯТИЯ
+    // ============================================================
+    function createEvent() {
+        const title = document.getElementById('createTitle');
+        const description = document.getElementById('createDescription');
+        
+        if (!title || !title.value.trim()) {
+            showToast('Введите название мероприятия', 'error');
+            if (title) title.focus();
+            return;
+        }
+        
+        if (!description || !description.value.trim()) {
+            showToast('Введите описание мероприятия', 'error');
+            if (description) description.focus();
+            return;
+        }
+        
+        showToast('✅ Мероприятие отправлено на модерацию!', 'success');
+        
+        title.value = '';
+        description.value = '';
+        
+        setTimeout(() => showPage('events'), 1000);
+    }
+    
+    // ============================================================
+    // ФИЛЬТРЫ
+    // ============================================================
+    function applyFilter() {
+        const type = document.getElementById('filterType');
+        const city = document.getElementById('filterCity');
+        
+        const typeVal = type ? type.value : '';
+        const cityVal = city ? city.value : '';
+        
+        let message = 'Фильтры применены';
+        if (typeVal) message += ': ' + typeVal;
+        if (cityVal) message += ', ' + cityVal;
+        
+        showToast('🔍 ' + message, 'info');
+    }
+    
+    // ============================================================
+    // ВХОД
+    // ============================================================
+    function doLogin() {
+        const email = document.getElementById('loginEmail');
+        const password = document.getElementById('loginPassword');
+        
+        if (!email || !email.value.trim()) {
+            showToast('Введите email', 'error');
+            if (email) email.focus();
+            return;
+        }
+        
+        if (!password || !password.value.trim()) {
+            showToast('Введите пароль', 'error');
+            if (password) password.focus();
+            return;
+        }
+        
+        showToast('✅ Вы вошли в систему!', 'success');
+        setTimeout(() => showPage('profile'), 800);
+    }
+    
+    // ============================================================
+    // РЕГИСТРАЦИЯ
+    // ============================================================
+    function doRegister() {
+        const email = document.getElementById('regEmail');
+        const name = document.getElementById('regName');
+        const phone = document.getElementById('regPhone');
+        const password = document.getElementById('regPassword');
+        const confirm = document.getElementById('regConfirm');
+        const consent = document.getElementById('regConsent');
+        
+        if (!email || !email.value.trim()) { showToast('Введите email', 'error'); return; }
+        if (!name || !name.value.trim()) { showToast('Введите ФИО', 'error'); return; }
+        if (!phone || !phone.value.trim()) { showToast('Введите телефон', 'error'); return; }
+        if (!password || password.value.length < 8) { showToast('Пароль должен быть не менее 8 символов', 'error'); return; }
+        if (password.value !== confirm.value) { showToast('Пароли не совпадают', 'error'); return; }
+        if (!consent || !consent.checked) { showToast('Подтвердите согласие на обработку данных', 'error'); return; }
+        
+        showToast('✅ Регистрация успешна!', 'success');
+        setTimeout(() => showPage('login'), 1000);
+    }
+    
+    // ============================================================
+    // ПРОФИЛЬ — ЗАПОЛНЕНИЕ ФОРМЫ РЕДАКТИРОВАНИЯ
+    // ============================================================
+    function fillProfileForm() {
+        const name = document.getElementById('editName');
+        const email = document.getElementById('editEmail');
+        const phone = document.getElementById('editPhone');
+        const city = document.getElementById('editCity');
+        const about = document.getElementById('editAbout');
+        const skills = document.getElementById('editSkills');
+        const password = document.getElementById('editPassword');
+        const confirm = document.getElementById('editConfirm');
+
+        if (name) name.value = userProfile.name;
+        if (email) email.value = userProfile.email;
+        if (phone) phone.value = userProfile.phone;
+        if (city) city.value = userProfile.city || '';
+        if (about) about.value = userProfile.about || '';
+        if (skills) skills.value = userProfile.skills.join(', ');
+        if (password) password.value = '';
+        if (confirm) confirm.value = '';
+    }
+    
+    // ============================================================
+    // ПРОФИЛЬ — СОХРАНЕНИЕ
+    // ============================================================
+    function saveProfile() {
+        const name = document.getElementById('editName');
+        const email = document.getElementById('editEmail');
+        const phone = document.getElementById('editPhone');
+        const city = document.getElementById('editCity');
+        const about = document.getElementById('editAbout');
+        const skills = document.getElementById('editSkills');
+        const password = document.getElementById('editPassword');
+        const confirm = document.getElementById('editConfirm');
+
+        if (!name || !name.value.trim()) {
+            showToast('Введите ФИО', 'error');
+            if (name) name.focus();
+            return;
+        }
+        if (!email || !email.value.trim() || !email.value.includes('@')) {
+            showToast('Введите корректный email', 'error');
+            if (email) email.focus();
+            return;
+        }
+        if (!phone || !phone.value.trim()) {
+            showToast('Введите телефон', 'error');
+            if (phone) phone.focus();
+            return;
+        }
+
+        if (password && password.value.trim()) {
+            if (password.value.length < 8) {
+                showToast('Пароль должен быть не менее 8 символов', 'error');
+                password.focus();
+                return;
+            }
+            if (password.value !== confirm.value) {
+                showToast('Пароли не совпадают', 'error');
+                confirm.focus();
+                return;
+            }
+        }
+
+        userProfile.name = name.value.trim();
+        userProfile.email = email.value.trim();
+        userProfile.phone = phone.value.trim();
+        userProfile.city = city ? city.value : '';
+        userProfile.about = about ? about.value.trim() : '';
+        userProfile.skills = skills
+            ? skills.value.split(',').map(s => s.trim()).filter(Boolean)
+            : [];
+
+        updateProfileView();
+        showToast('✅ Профиль сохранён!', 'success');
+        setTimeout(() => showPage('profile'), 600);
+    }
+    
+    // ============================================================
+    // ПРОФИЛЬ — ОБНОВЛЕНИЕ ОТОБРАЖЕНИЯ
+    // ============================================================
+    function updateProfileView() {
+        const nameEl = document.getElementById('profileName');
+        const emailEl = document.getElementById('profileEmail');
+        const phoneEl = document.getElementById('profilePhone');
+        const cityEl = document.getElementById('profileCity');
+        const aboutEl = document.getElementById('profileAbout');
+        const skillsEl = document.getElementById('profileSkills');
+
+        if (nameEl) nameEl.textContent = userProfile.name;
+        if (emailEl) emailEl.textContent = userProfile.email;
+        if (phoneEl) phoneEl.textContent = userProfile.phone;
+        if (cityEl) cityEl.textContent = userProfile.city || 'Не указан';
+        if (aboutEl) aboutEl.textContent = userProfile.about || '—';
+
+        if (skillsEl) {
+            if (userProfile.skills.length === 0) {
+                skillsEl.innerHTML = '<span class="text-muted" style="font-size:0.75rem;">Навыки не указаны</span>';
+            } else {
+                skillsEl.innerHTML = userProfile.skills
+                    .map(s => `<span class="badge bg-secondary">${s}</span>`)
+                    .join('');
+            }
+        }
+    }
+    
+    // ============================================================
+    // УДАЛЕНИЕ АККАУНТА
+    // ============================================================
+    function deleteAccount() {
+        if (confirm('Вы уверены, что хотите удалить аккаунт? Все данные будут удалены.')) {
+            showToast('Аккаунт удалён', 'error');
+            setTimeout(() => showPage('home'), 1000);
+        }
+    }
+    
+    // ============================================================
+    // PWA — УСТАНОВКА
+    // ============================================================
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        const banner = document.getElementById('installBanner');
+        if (banner) banner.classList.add('show');
+    });
+    
+    function installApp() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                const banner = document.getElementById('installBanner');
+                if (banner) banner.classList.remove('show');
+                deferredPrompt = null;
+            });
+        } else {
+            showToast('Для установки используйте меню браузера → "Установить приложение"', 'info');
+        }
+    }
+    
+    window.addEventListener('appinstalled', () => {
+        showToast('🎉 Приложение установлено!', 'success');
+        deferredPrompt = null;
+    });
+    
+    // ============================================================
+    // КАРТА (Leaflet)
+    // ============================================================
+    function initMap() {
+        const mapEl = document.getElementById('map');
+        if (!mapEl) return;
+        
+        try {
+            const map = L.map('map').setView([63.5, 54.0], 6);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap',
+                maxZoom: 18
+            }).addTo(map);
+            
+            const typeColors = {
+                'search': '#E74C3C',
+                'veterans': '#2980B9',
+                'subbotnik': '#27AE60',
+                'donation': '#F1C40F',
+                'animals': '#8E44AD',
+                'other': '#E67E22'
+            };
+            
+            const markers = [
+                {lat: 61.668, lng: 50.836, label: '🔍 Поиск в лесу — Сыктывкар', type: 'search'},
+                {lat: 63.556, lng: 53.679, label: '❤️ Помощь ветерану — Ухта', type: 'veterans'},
+                {lat: 67.497, lng: 64.061, label: '🌿 Субботник — Воркута', type: 'subbotnik'},
+                {lat: 65.148, lng: 57.224, label: '🩸 Донорство — Печора', type: 'donation'},
+                {lat: 66.040, lng: 60.115, label: '🐾 Животные — Инта', type: 'animals'},
+                {lat: 65.999, lng: 57.557, label: '📌 Другое — Усинск', type: 'other'}
+            ];
+            
+            markers.forEach(function(m) {
+                const color = typeColors[m.type] || '#E67E22';
+                const marker = L.circleMarker([m.lat, m.lng], {
+                    radius: 10,
+                    fillColor: color,
+                    color: '#fff',
+                    weight: 2,
+                    fillOpacity: 0.9
+                }).addTo(map);
+                
+                const popupContent = document.createElement('div');
+                popupContent.innerHTML = '<b>' + m.label + '</b><br>';
+                
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-primary btn-sm mt-1';
+                btn.textContent = 'Подробнее';
+                btn.onclick = function() { showPage('event-detail'); };
+                popupContent.appendChild(btn);
+                
+                marker.bindPopup(popupContent);
+            });
+            
+            setTimeout(function() { map.invalidateSize(); }, 300);
+        } catch (e) {
+            console.error('Ошибка инициализации карты:', e);
+        }
+    }
+    
+    // ============================================================
+    // КАЛЕНДАРЬ (FullCalendar)
+    // ============================================================
+    function initCalendar() {
+        const calendarEl = document.getElementById('calendar');
+        if (!calendarEl) return;
+        
+        try {
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next',
+                    center: 'title',
+                    right: 'today'
+                },
+                events: [
+                    { title: '🔍 Поиск в лесу', start: '2026-07-15', color: '#E74C3C' },
+                    { title: '❤️ Помощь ветерану', start: '2026-07-16', color: '#2980B9' },
+                    { title: '🌿 Субботник', start: '2026-07-17', color: '#27AE60' },
+                    { title: '🩸 Донорство', start: '2026-07-18', color: '#F1C40F' }
+                ],
+                eventClick: function(info) {
+                    info.jsEvent.preventDefault();
+                    showPage('event-detail');
+                },
+                locale: 'ru',
+                height: 'auto',
+                contentHeight: 350
+            });
+            calendar.render();
+        } catch (e) {
+            console.error('Ошибка инициализации календаря:', e);
+        }
+    }
+    
+    // ============================================================
+    // ЗАКРЫТИЕ МОДАЛЬНОГО ОКНА ПО КЛИКУ НА ФОН
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('modalOverlay');
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) closeModal();
+            });
+        }
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+        
+        const quickHelpInput = document.getElementById('quickHelp');
+        if (quickHelpInput) {
+            quickHelpInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') quickHelp();
+            });
+        }
+        
+        const assistantInput = document.getElementById('assistantInput');
+        if (assistantInput) {
+            assistantInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') assistantFill();
+            });
+        }
+        
+        const loginPasswordInput = document.getElementById('loginPassword');
+        if (loginPasswordInput) {
+            loginPasswordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') doLogin();
+            });
+        }
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
